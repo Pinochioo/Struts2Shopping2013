@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<constant name="struts.devMode" value="true"/>
+<package name="sunll" extends="struts-default">
+	<interceptors>
+		<interceptor name="isLogin" class="interceptor.AuthorityInterceptor"/>
+		<interceptor-stack name="myStack">
+			<interceptor-ref name="isLogin"/>
+			<interceptor-ref name="defaultStack"/>
+		</interceptor-stack>
+	</interceptors>
+	<default-interceptor-ref name="myStack"/><!-- 为这个包设置默认的拦截器栈 -->
+	<!-- 设置全局的result -->
+    <global-results>  
+    	<result name="input">/userLogin.jsp</result>  
+    </global-results> 
+    
+	<action name="myLogin" class="action.MyLoginAction">
+		<result type="chain">getAllGoods</result><!-- type="chain" 表示Action链式处理结果的类型，直接在struts.xml中执行action之间的跳转 -->
+		<result name="input">/userLogin.jsp</result><!-- 登陆失败 -->
+		<interceptor-ref name="defaultStack"/>
+	</action>
+	
+	<action name="getAllGoods" class="action.GoodsAction" method="findAllGoods">
+		<result>/goodslist.jsp</result>
+	</action>
+	
+	<action name="addToCart" class="action.CartAction" method="addToCart">
+		<result name="usercart">/userCart.jsp</result>
+	</action>
+	
+	<action name="clearCart" class="action.CartAction" method="clearCart">
+		<result name="usercart">/userCart.jsp</result>
+	</action>
+	
+	<action name="modifyGoods" class="action.CartAction" method="modifyGoods">
+		<result name="usercart">/userCart.jsp</result>
+	</action>
+	
+	<action name="deleteGoods" class="action.CartAction" method="deleteGoods">
+		<result name="usercart">/userCart.jsp</result>
+	</action>
+	
+	<action name="*">
+		<result name="success">/{1}.jsp</result>
+	</action>
+</package>
+</struts>    
